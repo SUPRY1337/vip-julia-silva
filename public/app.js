@@ -102,10 +102,14 @@ document.addEventListener('click', (event) => { if (!event.target.closest('.head
 
 async function loadVideos() {
   try {
-    const response = await fetch('/api/videos', { headers: { Accept: 'application/json' } });
+    const localCatalog = new URL('api/videos', document.baseURI);
+    const staticCatalog = new URL('videos/catalog.json', document.baseURI);
+    let response = await fetch(localCatalog, { headers: { Accept: 'application/json' } });
+    if (!response.ok) response = await fetch(staticCatalog, { headers: { Accept: 'application/json' } });
     if (!response.ok) throw new Error('catalog');
     const payload = await response.json();
     state.videos = Array.isArray(payload.videos) ? payload.videos : [];
+    state.videos = state.videos.map((video) => ({ ...video, src: new URL(video.src, document.baseURI).href }));
     statusMessage.textContent = state.videos.length ? '' : '';
     render();
   } catch {

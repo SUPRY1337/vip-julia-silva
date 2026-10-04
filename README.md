@@ -34,6 +34,12 @@ git commit -m "feat: criar biblioteca VIP Julia Silva"
 git push
 ```
 
+## GitHub Pages
+
+O workflow em `.github/workflows/pages.yml` publica automaticamente a pasta `public` a cada push na branch `main`. Antes do deploy, ele executa `npm run build:catalog` para gerar `public/videos/catalog.json`; assim, o site estático continua lendo os vídeos organizados em `public/videos/vip1`, `public/videos/vip2` e `public/videos/vip3`.
+
+No GitHub, abra **Settings → Pages**, selecione **GitHub Actions** como fonte e aguarde a execução do workflow. O endereço padrão será `https://supry1337.github.io/vip-julia-silva/`.
+
 ## Estrutura
 
 - `server.mjs`: servidor HTTP e descoberta recursiva dos vídeos.
