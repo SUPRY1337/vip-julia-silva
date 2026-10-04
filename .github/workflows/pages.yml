@@ -28,6 +28,8 @@ jobs:
         run: node scripts/build-catalog.mjs
       - name: Configurar Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - name: Montar artefato estático
         uses: actions/upload-pages-artifact@v3
         with:
