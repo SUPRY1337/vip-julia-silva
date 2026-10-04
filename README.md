@@ -12,7 +12,7 @@ Depois abra `http://localhost:3000`.
 
 ## Adicionar vídeos
 
-Copie seus arquivos para `public/videos`. O servidor reconhece `.mp4`, `.webm`, `.mov`, `.m4v` e `.ogg` e atualiza o catálogo automaticamente ao recarregar a página.
+Copie seus arquivos para `public/videos`. O servidor reconhece vídeos `.mp4`, `.webm`, `.mov`, `.m4v`, `.ogg` e imagens `.jpg`, `.jpeg`, `.png`, `.webp` e `.gif`, atualizando o catálogo automaticamente ao recarregar a página.
 
 Para usar o menu de três pontos, organize por coleção:
 

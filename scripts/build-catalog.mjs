@@ -4,8 +4,8 @@ import path from 'node:path';
 const root = process.cwd();
 const videosDir = path.join(root, 'public', 'videos');
 const output = path.join(videosDir, 'catalog.json');
-const extensions = new Set(['.mp4', '.webm', '.mov', '.m4v', '.ogg']);
-const mime = { '.mp4': 'video/mp4', '.webm': 'video/webm', '.mov': 'video/quicktime', '.m4v': 'video/x-m4v', '.ogg': 'video/ogg' };
+const extensions = new Set(['.mp4', '.webm', '.mov', '.m4v', '.ogg', '.jpg', '.jpeg', '.png', '.webp', '.gif']);
+const mime = { '.mp4': 'video/mp4', '.webm': 'video/webm', '.mov': 'video/quicktime', '.m4v': 'video/x-m4v', '.ogg': 'video/ogg', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.gif': 'image/gif' };
 
 const titleFromFilename = (filename) => path.basename(filename, path.extname(filename)).replace(/[._-]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, (letter) => letter.toUpperCase()) || 'Vídeo sem título';
 const categoryFromPath = (relative) => {
@@ -26,7 +26,8 @@ async function collect(directory, prefix = '') {
     if (entry.isDirectory()) videos.push(...await collect(absolute, relative));
     else if (extensions.has(path.extname(entry.name).toLowerCase())) {
       const stat = await fs.stat(absolute);
-      videos.push({ id: Buffer.from(relative).toString('base64url'), title: titleFromFilename(entry.name), category: categoryFromPath(relative), filename: relative, src: `videos/${relative.split('/').map(encodeURIComponent).join('/')}`, type: mime[path.extname(entry.name).toLowerCase()], size: stat.size, updatedAt: stat.mtime.toISOString() });
+      const extension = path.extname(entry.name).toLowerCase();
+      videos.push({ id: Buffer.from(relative).toString('base64url'), title: titleFromFilename(entry.name), category: categoryFromPath(relative), filename: relative, src: `videos/${relative.split('/').map(encodeURIComponent).join('/')}`, type: mime[extension], kind: extension.startsWith('.') && ['.jpg', '.jpeg', '.png', '.webp', '.gif'].includes(extension) ? 'image' : 'video', size: stat.size, updatedAt: stat.mtime.toISOString() });
     }
   }
   return videos.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));

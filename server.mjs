@@ -18,13 +18,14 @@ const mimeTypes = {
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.png': 'image/png',
+  '.gif': 'image/gif',
   '.mp4': 'video/mp4',
   '.webm': 'video/webm',
   '.mov': 'video/quicktime',
   '.m4v': 'video/x-m4v',
   '.ogg': 'video/ogg'
 };
-const videoExtensions = new Set(['.mp4', '.webm', '.mov', '.m4v', '.ogg']);
+const mediaExtensions = new Set(['.mp4', '.webm', '.mov', '.m4v', '.ogg', '.jpg', '.jpeg', '.png', '.webp', '.gif']);
 
 function titleFromFilename(filename) {
   return path.basename(filename, path.extname(filename))
@@ -54,7 +55,7 @@ async function collectVideos(directory, prefix = '') {
       continue;
     }
     const extension = path.extname(entry.name).toLowerCase();
-    if (!videoExtensions.has(extension)) continue;
+    if (!mediaExtensions.has(extension)) continue;
     const stat = await fs.stat(absolute);
     videos.push({
       id: Buffer.from(relative).toString('base64url'),
@@ -63,6 +64,7 @@ async function collectVideos(directory, prefix = '') {
       filename: relative,
       src: `/videos/${relative.split('/').map(encodeURIComponent).join('/')}`,
       type: mimeTypes[extension] || 'video/mp4',
+      kind: extension.startsWith('.') && ['.jpg', '.jpeg', '.png', '.webp', '.gif'].includes(extension) ? 'image' : 'video',
       size: stat.size,
       updatedAt: stat.mtime.toISOString()
     });
